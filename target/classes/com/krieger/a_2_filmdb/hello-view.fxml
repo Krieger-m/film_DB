@@ -145,7 +145,7 @@
                         </DropShadow>
                      </effect></TextField>
                   <Pane maxHeight="10.0" minWidth="20.0" />
-                  <Button fx:id="test_btn" mnemonicParsing="false" onAction="#onTest_btnClick" text="Suche">
+                  <Button fx:id="test_btn" mnemonicParsing="false" onAction="#onSearch_btnClick" text="Suche">
                      <effect>
                         <DropShadow blurType="GAUSSIAN" height="12.0" offsetX="1.0" offsetY="1.5" radius="5.5" width="12.0">
                            <color>
