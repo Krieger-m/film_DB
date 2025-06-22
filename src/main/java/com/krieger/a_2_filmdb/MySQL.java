@@ -42,15 +42,19 @@ public class MySQL {
     }
 
 
-    public void showFilmsContaining(String tf, String s) throws SQLException {
+    public void showFilmsContaining(String s) throws SQLException {
         try {
             filmList.clear();
             establishConnection();
-            String query = "SELECT * FROM film WHERE ? LIKE ?";
+            String query = "SELECT * FROM film WHERE Titel LIKE ? OR Lagerort LIKE ? OR Genre LIKE ? OR BonusFeatures LIKE ?;";
             this.preparedStatement = this.connection.prepareStatement(query);
-            this.preparedStatement.setString(1, "%" + tf + "%");
-            this.preparedStatement.setString(2, "%" + s + "%");
+            this.preparedStatement.setString(1,"%"+s+"%");
+            this.preparedStatement.setString(2,"%"+s+"%");
+            this.preparedStatement.setString(3,"%"+s+"%");
+            this.preparedStatement.setString(4,"%"+s+"%");
+
             rs = preparedStatement.executeQuery();
+            System.out.println(preparedStatement);
             while (rs.next()){
                 String sb = "ID: "+rs.getInt(1)+
                         "\n\t\tTitel: "+rs.getString("Titel") +

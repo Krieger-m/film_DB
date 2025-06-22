@@ -53,26 +53,29 @@ public class Controller {
 
     }
 
+    private PauseTransition searchPause = new PauseTransition(Duration.seconds(2));
+
     @FXML
-    public void searchOnKeyTyped(){  if (!suche_textField.getText().isEmpty()) {
+    public void searchOnKeyTyped() {
+        searchPause.setOnFinished(event -> {
+            try {
+                if (!suche_textField.getText().isEmpty()) {
 
-        PauseTransition pause = new PauseTransition(Duration.seconds(2));
-        pause.setOnFinished(event -> {
+                    mySQL.showFilmsContaining(suche_textField.getText());
+                    list_view.setItems(mySQL.getFilmList());
+                    setNotificationError("Kein entsprechender Film gefunden");
 
-
-
-
+                } else {
+                    mySQL.showAllFilms();
+                    list_view.setItems(mySQL.getFilmList());
+                }
+            } catch (SQLException e) {
                 setNotificationError("Kein entsprechender Film gefunden");
 
-        });pause.play();
-        try {
-            mySQL.showFilmsContaining("Titel", suche_textField.getText());
-        }
-        catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        list_view.setItems(mySQL.getFilmList());
-    }}
+            }
+        });
+        searchPause.playFromStart(); // Restart the timer on every key typed
+    }
 
     @FXML
     void onAdd_btnClick()  {
