@@ -18,7 +18,7 @@ public class Controller {
 
     public MySQL mySQL = new MySQL();
 
-
+    private int selectedIndexStored;
 
 
     @FXML private Button add_btn;   @FXML private Button test_btn;
@@ -44,7 +44,21 @@ public class Controller {
             setNotificationError("Fehler bei der SQL-Abfrage: " + err.getMessage());
             System.out.println("\n\t\t// Controller.initialize() - Fehler bei der SQL-Abfrage : \n\t" + err.getMessage());
         }
+        getSelectedIndex();
     }
+
+    this.list_view.setOnMouseClicked(event -> {
+        int newSelectedIndex = list_view.getSelectionModel().getSelectedIndex();
+        System.out.println(newSelectedIndex);
+    });
+
+    public void listViewClicked(){
+        this.list_view.setOnMouseClicked(event -> {
+            int newSelectedIndex = list_view.getSelectionModel().getSelectedIndex();
+            System.out.println(newSelectedIndex);
+        });
+    }
+
 
 
     @FXML
@@ -127,6 +141,14 @@ public class Controller {
         PauseTransition pause = new PauseTransition(Duration.seconds(5));
         pause.setOnFinished(event -> notification_label.setText(""));
         pause.play();
+    }
+
+    public void getSelectedIndex(){
+
+        int currentlySelectedIndex = list_view.getSelectionModel().getSelectedIndex();
+
+        System.out.println("\n\t\t// Controller.getSelectedIndex() - currentlySelectedIndex: " + currentlySelectedIndex);
+
     }
 
 
