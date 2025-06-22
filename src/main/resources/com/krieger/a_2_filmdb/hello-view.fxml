@@ -128,7 +128,7 @@
                   <Insets left="20.0" right="20.0" top="10.0" />
                </VBox.margin>
             </HBox>
-            <Label fx:id="notification_lbl" alignment="CENTER" contentDisplay="CENTER" text="     " textFill="WHITE" VBox.vgrow="SOMETIMES" />
+            <Label fx:id="notification_label" alignment="CENTER" contentDisplay="CENTER" text="     " textFill="WHITE" VBox.vgrow="SOMETIMES" />
          </children>
       </VBox>
       <Separator opacity="0.05" orientation="VERTICAL" prefHeight="200.0" />

@@ -1,5 +1,6 @@
 package com.krieger.a_2_filmdb;
 
+import javafx.animation.PauseTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -8,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 
 import java.sql.SQLException;
 
@@ -28,27 +30,41 @@ public class Controller {
 
     @FXML private ListView<String> list_view;
 
-    @FXML private Label notification_lbl;
+    @FXML private Label notification_label;
 
     @FXML private VBox textField_container;
 
+
+    @FXML
+    public void initialize() {
+        try {
+            mySQL.showAllFilms();
+            list_view.setItems(mySQL.getFilmList());
+        } catch (SQLException err) {
+            setNotificationError("Fehler bei der SQL-Abfrage: " + err.getMessage());
+            System.out.println("\n\t\t// Controller.initialize() - Fehler bei der SQL-Abfrage : \n\t" + err.getMessage());
+        }
+    }
 
 
     @FXML
     void onAdd_btnClick()  {
         String titel = titel_textField.getText();
         String lagerort = lagerort_textField.getText();
-        int spieldauer = Integer.parseInt(spieldauer_textField.getText());
-        String bonusFeatures = bonusFeatures_textField.getText();
-        String genre = genre_textField.getText();
 
         if (titel.isEmpty() || lagerort.isEmpty()) {
-            notification_lbl.setText("Bitte füllen Sie alle Felder aus.");
+            setNotificationError("Bitte Titel und Lagerort eingeben.");
             return;
-        }
-        mySQL.addFilm(titel,lagerort,spieldauer,bonusFeatures,genre);
+        } else {
+            int spieldauer = Integer.parseInt(spieldauer_textField.getText());
+            String bonusFeatures = bonusFeatures_textField.getText();
+            String genre = genre_textField.getText();
 
-        clearAllTextFields();
+            mySQL.addFilm(titel,lagerort,spieldauer,bonusFeatures,genre);
+            setNotificationSuccess("Film erfolgreich hinzugefügt.");
+
+            clearAllTextFields();
+        }
     }
 
     @FXML
@@ -66,10 +82,9 @@ public class Controller {
             mySQL.deleteFilm(filmId);
             list_view.refresh();
 //            list_view.getItems().remove(selectedFilm);
-            notification_lbl.setText("Film erfolgreich gelöscht.");
+            setNotificationSuccess("Film erfolgreich gelöscht.");
         } else {
-            notification_lbl.setText("Bitte wählen Sie einen Film zum Löschen aus oder geben Sie Titel oder die ID " +
-                    "ein.");
+            setNotificationError("Bitte wählen Sie einen Film zum Löschen aus\noder geben Sie Titel oder die ID ein.");
         }
     }
 
@@ -80,8 +95,8 @@ public class Controller {
                 mySQL.showAllFilms();
                 list_view.setItems( mySQL.getFilmList());
             }catch(SQLException err){
-                notification_lbl.setText("// Fehler bei der SQL-Abfrage : " + err);
-                System.out.println("\n\t\t// Controller.onSearchButtonClicked() - Fehler bei der SQL-Abfrage : " + err);
+                setNotificationError("Fehler bei der SQL-Abfrage: " + err.getMessage());
+                System.out.println("\n\t\t// Controller.onSearchButtonClicked() - Fehler bei der SQL-Abfrage : \n\t" + err.getMessage());
             }
         }
 
@@ -96,4 +111,23 @@ public class Controller {
             }
         }
     }
+
+    private void setNotificationError(String message) {
+        notification_label.setText(message);
+        notification_label.setStyle("-fx-text-fill: #e06c75;");
+        hideNotificationAfterDelay();
+    }
+    private void setNotificationSuccess(String message) {
+        notification_label.setText(message);
+        notification_label.setStyle("-fx-text-fill: #98c379;");
+        hideNotificationAfterDelay();
+    }
+
+    private void hideNotificationAfterDelay() {
+        PauseTransition pause = new PauseTransition(Duration.seconds(5));
+        pause.setOnFinished(event -> notification_label.setText(""));
+        pause.play();
+    }
+
+
 }
