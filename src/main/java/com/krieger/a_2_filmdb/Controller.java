@@ -53,15 +53,15 @@ public class Controller {
 
     }
 
-    private PauseTransition searchPause = new PauseTransition(Duration.seconds(2));
+    private PauseTransition searchPause = new PauseTransition(Duration.seconds(1));
 
     @FXML
     public void searchOnKeyTyped() {
         searchPause.setOnFinished(event -> {
             try {
-                if (!suche_textField.getText().isEmpty()) {
+                if (!titel_textField.getText().isEmpty()) {
 
-                    mySQL.showFilmsContaining(suche_textField.getText());
+                    mySQL.showFilmsContaining(titel_textField.getText());
                     list_view.setItems(mySQL.getFilmList());
                     setNotificationError("Kein entsprechender Film gefunden");
 
@@ -124,15 +124,17 @@ public class Controller {
 
         } else if(this.list_view.getSelectionModel().getSelectedIndex() == -1 && this.titel_textField.getText().isEmpty()) {
             setNotificationError("Bitte wählen Sie einen Film zum Löschen aus\noder geben Sie Titel oder die ID ein.");
+            clearAllTextFields();
         }
     }
 
     @FXML
     void onSearch_btnClick()  {
-        if (suche_textField.getText().isEmpty()) {
+        if (this.titel_textField.getText().isEmpty()) {
             try{
                 mySQL.showAllFilms();
                 list_view.setItems( mySQL.getFilmList());
+                clearAllTextFields();
             }catch(SQLException err){
                 setNotificationError("Fehler bei der SQL-Abfrage: " + err.getMessage());
                 System.out.println("\n\t\t// Controller.onSearchButtonClicked() - Fehler bei der SQL-Abfrage : \n\t" + err.getMessage());

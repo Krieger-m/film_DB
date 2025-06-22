@@ -75,12 +75,12 @@ public class MySQL {
         filmList.clear();
         while (rs.next()){
             String sb = "ID: "+rs.getInt(1)+
-                    "\n\t\tTitel: "+rs.getString("Titel") +
-                    "\n\t\tLagerort: "+rs.getString("Lagerort") +
-                    "\n\t\tSpieldauer: "+rs.getInt("Spieldauer") +
-                    "\n\t\tBonus Features: "+rs.getString("BonusFeatures") +
-                    "\n\t\tGenre: "+rs.getString("Genre")+"\n";
-            System.out.println("\n  -> " + sb.split("\n")[0]+" "+sb.split("\n")[1]);
+                    "\n\t\tTitel:\t\t\t\t"+rs.getString("Titel") +
+                    "\n\t\tLagerort:\t\t\t"+rs.getString("Lagerort") +
+                    "\n\t\tSpieldauer:\t\t"+rs.getInt("Spieldauer") +
+                    "\n\t\tBonus Features:\t"+rs.getString("BonusFeatures") +
+                    "\n\t\tGenre:\t\t\t"+rs.getString("Genre")+"\n";
+            System.out.println("\t-> " + sb.split("\n")[0]+" "+sb.split("\n")[1]);
             filmList.add(sb);
         }
     }
