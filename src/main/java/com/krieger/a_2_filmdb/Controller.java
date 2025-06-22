@@ -19,7 +19,7 @@ public class Controller {
     public MySQL mySQL = new MySQL();
 
     private int prevIndexStored;
-    private int newSelectedIndexStored;
+    private int newIndexStored;
 
 
     @FXML private Button add_btn;   @FXML private Button test_btn;
@@ -95,11 +95,12 @@ public class Controller {
 
             clearAllTextFields();
         }
+
     }
 
     @FXML
     void onDelete_btnClick(ActionEvent event) {
-        String selectedFilm = list_view.getSelectionModel().getSelectedItem();
+        String selectedFilm = this.list_view.getSelectionModel().getSelectedItem();
         if (selectedFilm != null) {
             String[] parts = selectedFilm.split("\n");
 
@@ -109,15 +110,19 @@ public class Controller {
 
             System.out.println("id: "+filmId);
 
-            mySQL.deleteFilm(filmId);
-            list_view.getItems().remove(selectedFilm);
+            this.mySQL.deleteFilm(filmId);
+            this.list_view.getItems().remove(selectedFilm);
             setNotificationSuccess("Film erfolgreich gelöscht.");
-        } else if(list_view.getSelectionModel().getSelectedIndex() == -1 && !titel_textField.getText().isEmpty()) {
-            mySQL.deleteFilm(titel_textField.getText());
+            clearAllTextFields();
+            this.newIndexStored=-1;
+        } else if(this.list_view.getSelectionModel().getSelectedIndex() == -1 && !this.titel_textField.getText().isEmpty()) {
+            this.mySQL.deleteFilm(this.titel_textField.getText().toLowerCase());
+            this.list_view.setItems(this.mySQL.getFilmList());
             setNotificationSuccess("Film erfolgreich gelöscht.");
+            clearAllTextFields();
 
 
-        } else if(list_view.getSelectionModel().getSelectedIndex() == -1 && titel_textField.getText().isEmpty()) {
+        } else if(this.list_view.getSelectionModel().getSelectedIndex() == -1 && this.titel_textField.getText().isEmpty()) {
             setNotificationError("Bitte wählen Sie einen Film zum Löschen aus\noder geben Sie Titel oder die ID ein.");
         }
     }
@@ -165,24 +170,24 @@ public class Controller {
     }
 
     public void unselectItem(){
-        if(this.prevIndexStored == this.newSelectedIndexStored && this.prevIndexStored != -1){
+        if(this.prevIndexStored == this.newIndexStored && this.prevIndexStored != -1){
             this.list_view.getSelectionModel().clearSelection(this.prevIndexStored);
-            System.out.println("\n\t\t\t\t/ - item unselected at index: " + this.prevIndexStored);
+            System.out.println("\n\t\t\t\t/ - item unselected at index: " + (this.prevIndexStored+1));
         }
     }
 
     public void getSelectedIndex(){
 
         this.prevIndexStored = list_view.getSelectionModel().getSelectedIndex();
-        System.out.println("\n\t\t// Controller.getSelectedIndex() - selectedIndexStored: " + this.prevIndexStored);
+        System.out.println("\n\t\t// Controller.getSelectedIndex() - selectedIndexStored: " + (this.prevIndexStored));
     }
 
     @FXML
     public void getSelectedIndexOnClick(){
         this.list_view.setOnMouseClicked(e->{
-            this.newSelectedIndexStored = list_view.getSelectionModel().getSelectedIndex();
-            System.out.println("\n\t\t/ - item selected at index: " + this.newSelectedIndexStored);
-            this.prevIndexStored= this.newSelectedIndexStored;
+            this.newIndexStored = list_view.getSelectionModel().getSelectedIndex();
+            System.out.println("\n\t\t/ - item selected at index: " + (this.newIndexStored +1));
+            this.prevIndexStored= this.newIndexStored;
 
         });
 

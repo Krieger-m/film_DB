@@ -20,7 +20,9 @@ public class MySQL {
 
     }
 
+
     private List<String> filmList = new ArrayList<String>();
+
 
     public ObservableList<String> getFilmList() {
         return FXCollections.observableArrayList(filmList);
@@ -44,7 +46,6 @@ public class MySQL {
 
     public void showFilmsContaining(String s) throws SQLException {
         try {
-            filmList.clear();
             establishConnection();
             String query = "SELECT * FROM film WHERE Titel LIKE ? OR Lagerort LIKE ? OR Genre LIKE ? OR BonusFeatures LIKE ?;";
             this.preparedStatement = this.connection.prepareStatement(query);
@@ -53,19 +54,7 @@ public class MySQL {
             this.preparedStatement.setString(3,"%"+s+"%");
             this.preparedStatement.setString(4,"%"+s+"%");
 
-            rs = preparedStatement.executeQuery();
-            System.out.println(preparedStatement);
-            while (rs.next()){
-                String sb = "ID: "+rs.getInt(1)+
-                        "\n\t\tTitel: "+rs.getString("Titel") +
-                        "\n\t\tLagerort: "+rs.getString("Lagerort") +
-                        "\n\t\tSpieldauer: "+rs.getInt("Spieldaue" +
-                        "r") +
-                        "\n\t\tBonus Features: "+rs.getString("BonusFeatures") +
-                        "\n\t\tGenre: "+rs.getString("Genre")+"\n";
-                System.out.println("\n  -> " + sb);
-                filmList.add(sb);
-            }
+            updateFilmList();
         } catch (SQLException e) {
             System.out.println("\n\t\t// Fehler bei der SQL-Abfrage: " + e);
             throw e;
@@ -81,20 +70,25 @@ public class MySQL {
         }
     }
 
+    public void updateFilmList()throws SQLException{
+        rs = statement.executeQuery("select * from film");
+        filmList.clear();
+        while (rs.next()){
+            String sb = "ID: "+rs.getInt(1)+
+                    "\n\t\tTitel: "+rs.getString("Titel") +
+                    "\n\t\tLagerort: "+rs.getString("Lagerort") +
+                    "\n\t\tSpieldauer: "+rs.getInt("Spieldauer") +
+                    "\n\t\tBonus Features: "+rs.getString("BonusFeatures") +
+                    "\n\t\tGenre: "+rs.getString("Genre")+"\n";
+            System.out.println("\n  -> " + sb.split("\n")[0]+" "+sb.split("\n")[1]);
+            filmList.add(sb);
+        }
+    }
+
     public void showAllFilms() throws SQLException {
         try {
             establishConnection();
-            rs = statement.executeQuery("select * from film");
-            while (rs.next()){
-                String sb = "ID: "+rs.getInt(1)+
-                        "\n\t\tTitel: "+rs.getString("Titel") +
-                        "\n\t\tLagerort: "+rs.getString("Lagerort") +
-                        "\n\t\tSpieldauer: "+rs.getInt("Spieldauer") +
-                        "\n\t\tBonus Features: "+rs.getString("BonusFeatures") +
-                        "\n\t\tGenre: "+rs.getString("Genre")+"\n";
-                System.out.println("\n  -> " + sb);
-                filmList.add(sb);
-            }
+            updateFilmList();
         }catch (SQLException e) {
             System.out.println("\n\t\t// Fehler bei der SQL-Abfrage: " + e);
             throw e;
@@ -123,29 +117,9 @@ public class MySQL {
             this.preparedStatement.setString(5, genre);
             this.preparedStatement.executeUpdate();
             System.out.println("\n\t- Film erfolgreich hinzugefügt!");
+            updateFilmList();
         } catch (SQLException e) {
             System.out.println("\n\t\t// Fehler beim Hinzufügen des Films: " + e);
-        } finally {
-            closeConnection();
-        }
-    }
-
-    public void deleteFilm(int id, String titel){
-        try {
-            establishConnection();
-
-            String query = "DELETE FROM film WHERE ID = ? AND Titel = ?";
-            this.preparedStatement = this.connection.prepareStatement(query);
-            this.preparedStatement.setInt(1, id);
-            this.preparedStatement.setString(2, titel);
-            int rowsAffected = this.preparedStatement.executeUpdate();
-            if (rowsAffected > 0) {
-                System.out.println("\n\t- Film erfolgreich gelöscht!");
-            } else {
-                System.out.println("\n\t- Kein Film mit der angegebenen ID und Titel gefunden.");
-            }
-        } catch (SQLException e) {
-            System.out.println("\n\t\t// Fehler beim Löschen des Films: " + e);
         } finally {
             closeConnection();
         }
@@ -156,13 +130,15 @@ public class MySQL {
         try {
             establishConnection();
 
-            String query = "DELETE FROM film WHERE Titel = ?";
+            String query = "DELETE FROM film WHERE Titel LIKE ?";
             this.preparedStatement = this.connection.prepareStatement(query);
-            this.preparedStatement.setString(1, titel);
+            this.preparedStatement.setString(1, "%"+titel+"%");
 
             int rowsAffected = this.preparedStatement.executeUpdate();
+            updateFilmList();
             if (rowsAffected > 0) {
                 System.out.println("\n\t- Film erfolgreich gelöscht!");
+
             } else {
                 System.out.println("\n\t- Kein Film mit der angegebenen Titel gefunden.");
             }
@@ -182,8 +158,10 @@ public class MySQL {
             this.preparedStatement = this.connection.prepareStatement(query);
             this.preparedStatement.setInt(1, id);
             int rowsAffected = this.preparedStatement.executeUpdate();
+            updateFilmList();
             if (rowsAffected > 0) {
                 System.out.println("\n\t- Film erfolgreich gelöscht!");
+
             } else {
                 System.out.println("\n\t- Kein Film mit der angegebenen ID gefunden.");
             }
