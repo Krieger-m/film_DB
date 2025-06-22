@@ -57,6 +57,7 @@ public class MySQL {
             }
         }catch (SQLException e) {
             System.out.println("\n\t\t// Fehler bei der SQL-Abfrage: " + e);
+            throw e;
         } finally {
             if (rs != null) {
                 try {

@@ -12,8 +12,9 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
+<?import javafx.scene.text.Font?>
 
-<HBox alignment="TOP_CENTER" minHeight="480.0" minWidth="620.0" nodeOrientation="LEFT_TO_RIGHT" spacing="5.0" style="-fx-background-color: #4d4d4d;" xmlns="http://javafx.com/javafx/24" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.krieger.a_2_filmdb.Controller">
+<HBox alignment="TOP_CENTER" maxWidth="740.0" minHeight="480.0" minWidth="620.0" nodeOrientation="LEFT_TO_RIGHT" spacing="5.0" style="-fx-background-color: #343a40;" xmlns="http://javafx.com/javafx/24" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.krieger.a_2_filmdb.Controller">
    <children>
       <VBox alignment="TOP_CENTER" minHeight="150.0" minWidth="50.0" spacing="5.0" HBox.hgrow="ALWAYS">
          <children>
@@ -86,7 +87,7 @@
                   </TextField>
                </children>
             </VBox>
-            <HBox maxHeight="70.0" nodeOrientation="LEFT_TO_RIGHT" VBox.vgrow="ALWAYS">
+            <HBox maxHeight="40.0" nodeOrientation="LEFT_TO_RIGHT" VBox.vgrow="ALWAYS">
                <children>
                   <Button id="addBtn" fx:id="add_btn" onAction="#onAdd_btnClick" text="Add" HBox.hgrow="NEVER">
                      <cursor>
@@ -128,7 +129,13 @@
                   <Insets left="20.0" right="20.0" top="10.0" />
                </VBox.margin>
             </HBox>
-            <Label fx:id="notification_label" alignment="CENTER" contentDisplay="CENTER" text="     " textFill="WHITE" VBox.vgrow="SOMETIMES" />
+            <Label fx:id="notification_label" alignment="CENTER" contentDisplay="CENTER" maxWidth="250.0" minWidth="230.0" text="     " textAlignment="CENTER" textFill="WHITE" wrapText="true" VBox.vgrow="ALWAYS">
+               <VBox.margin>
+                  <Insets bottom="20.0" left="10.0" right="10.0" />
+               </VBox.margin>
+               <font>
+                  <Font size="14.0" />
+               </font></Label>
          </children>
       </VBox>
       <Separator opacity="0.05" orientation="VERTICAL" prefHeight="200.0" />
@@ -158,7 +165,7 @@
                   <Insets top="20.0" />
                </VBox.margin>
             </HBox>
-            <ListView id="listView" fx:id="list_view" maxHeight="700.0" maxWidth="700.0" minHeight="350.0" minWidth="350.0" prefHeight="350.0" prefWidth="350.0" style="-fx-corner-radius: 10px;" VBox.vgrow="SOMETIMES">
+            <ListView id="listView" fx:id="list_view" maxWidth="700.0" minHeight="350.0" minWidth="350.0" prefHeight="350.0" prefWidth="350.0" style="-fx-corner-radius: 10px;" VBox.vgrow="SOMETIMES">
                <cursor>
                   <Cursor fx:constant="DEFAULT" />
                </cursor>

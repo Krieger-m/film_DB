@@ -80,8 +80,7 @@ public class Controller {
             System.out.println("id: "+filmId);
 
             mySQL.deleteFilm(filmId);
-            list_view.refresh();
-//            list_view.getItems().remove(selectedFilm);
+            list_view.getItems().remove(selectedFilm);
             setNotificationSuccess("Film erfolgreich gelöscht.");
         } else {
             setNotificationError("Bitte wählen Sie einen Film zum Löschen aus\noder geben Sie Titel oder die ID ein.");
@@ -99,7 +98,6 @@ public class Controller {
                 System.out.println("\n\t\t// Controller.onSearchButtonClicked() - Fehler bei der SQL-Abfrage : \n\t" + err.getMessage());
             }
         }
-
     }
 
     private void clearAllTextFields(){
@@ -114,7 +112,9 @@ public class Controller {
 
     private void setNotificationError(String message) {
         notification_label.setText(message);
-        notification_label.setStyle("-fx-text-fill: #e06c75;");
+        notification_label.setStyle("-fx-text-fill: #df6b57;");
+
+//        notification_label.setStyle("-fx-text-fill: #e06c75;");
         hideNotificationAfterDelay();
     }
     private void setNotificationSuccess(String message) {
