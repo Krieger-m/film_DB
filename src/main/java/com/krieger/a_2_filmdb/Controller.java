@@ -24,7 +24,7 @@ public class Controller {
 
     @FXML private TextField bonusFeatures_textField;    @FXML private TextField genre_textField;
     @FXML private TextField lagerort_textField; @FXML private TextField spieldauer_textField;
-    @FXML private TextField titel_textField;
+    @FXML private TextField titel_textField;    @FXML private TextField suche_textField;
 
     @FXML private ListView<String> list_view;
 
@@ -68,19 +68,23 @@ public class Controller {
 //            list_view.getItems().remove(selectedFilm);
             notification_lbl.setText("Film erfolgreich gelöscht.");
         } else {
-            notification_lbl.setText("Bitte wählen Sie einen Film zum Löschen aus oder geben Sie Titel oder ID ein.");
+            notification_lbl.setText("Bitte wählen Sie einen Film zum Löschen aus oder geben Sie Titel oder die ID " +
+                    "ein.");
         }
     }
 
     @FXML
     void onSearch_btnClick()  {
-        try{
-            mySQL.showAllFilms();
-            list_view.setItems( mySQL.getFilmList());
-        }catch(SQLException err){
-            notification_lbl.setText("// Controller.onAddButtonClicked() - Fehler bei der SQL-Abfrage : " + err);
-            System.out.println("\n\t\t// Controller.onAddButtonClicked() - Fehler bei der SQL-Abfrage : " + err);
+        if (suche_textField.getText().isEmpty()) {
+            try{
+                mySQL.showAllFilms();
+                list_view.setItems( mySQL.getFilmList());
+            }catch(SQLException err){
+                notification_lbl.setText("// Fehler bei der SQL-Abfrage : " + err);
+                System.out.println("\n\t\t// Controller.onSearchButtonClicked() - Fehler bei der SQL-Abfrage : " + err);
+            }
         }
+
     }
 
     private void clearAllTextFields(){
