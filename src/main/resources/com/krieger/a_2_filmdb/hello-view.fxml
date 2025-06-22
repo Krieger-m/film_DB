@@ -143,7 +143,7 @@
          <children>
             <HBox maxWidth="700.0" minWidth="50.0">
                <children>
-                  <TextField fx:id="suche_textField" promptText="  ..." HBox.hgrow="SOMETIMES">
+                  <TextField fx:id="suche_textField" onKeyTyped="#searchOnKeyTyped" promptText="  ..." HBox.hgrow="SOMETIMES">
                      <effect>
                         <DropShadow blurType="GAUSSIAN" height="12.0" offsetX="1.0" offsetY="1.5" radius="5.5" width="12.0">
                            <color>
@@ -165,7 +165,7 @@
                   <Insets top="20.0" />
                </VBox.margin>
             </HBox>
-            <ListView id="listView" fx:id="list_view" maxWidth="700.0" minHeight="350.0" minWidth="350.0" prefHeight="350.0" prefWidth="350.0" style="-fx-corner-radius: 10px;" VBox.vgrow="SOMETIMES">
+            <ListView id="listView" fx:id="list_view" maxWidth="700.0" minHeight="350.0" minWidth="350.0" onMouseReleased="#unselectItem" prefHeight="350.0" prefWidth="350.0" style="-fx-corner-radius: 10px;" VBox.vgrow="SOMETIMES">
                <cursor>
                   <Cursor fx:constant="DEFAULT" />
                </cursor>

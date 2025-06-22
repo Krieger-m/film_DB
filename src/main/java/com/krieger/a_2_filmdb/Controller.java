@@ -18,7 +18,8 @@ public class Controller {
 
     public MySQL mySQL = new MySQL();
 
-    private int selectedIndexStored;
+    private int prevIndexStored;
+    private int newSelectedIndexStored;
 
 
     @FXML private Button add_btn;   @FXML private Button test_btn;
@@ -35,6 +36,7 @@ public class Controller {
     @FXML private VBox textField_container;
 
 
+
     @FXML
     public void initialize() {
         try {
@@ -45,21 +47,32 @@ public class Controller {
             System.out.println("\n\t\t// Controller.initialize() - Fehler bei der SQL-Abfrage : \n\t" + err.getMessage());
         }
         getSelectedIndex();
+        getSelectedIndexOnClick();
+
+
+
     }
 
-    this.list_view.setOnMouseClicked(event -> {
-        int newSelectedIndex = list_view.getSelectionModel().getSelectedIndex();
-        System.out.println(newSelectedIndex);
-    });
+    @FXML
+    public void searchOnKeyTyped(){  if (!suche_textField.getText().isEmpty()) {
 
-    public void listViewClicked(){
-        this.list_view.setOnMouseClicked(event -> {
-            int newSelectedIndex = list_view.getSelectionModel().getSelectedIndex();
-            System.out.println(newSelectedIndex);
-        });
-    }
+        PauseTransition pause = new PauseTransition(Duration.seconds(2));
+        pause.setOnFinished(event -> {
 
 
+
+
+                setNotificationError("Kein entsprechender Film gefunden");
+
+        });pause.play();
+        try {
+            mySQL.showFilmsContaining("Titel", suche_textField.getText());
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        list_view.setItems(mySQL.getFilmList());
+    }}
 
     @FXML
     void onAdd_btnClick()  {
@@ -96,7 +109,12 @@ public class Controller {
             mySQL.deleteFilm(filmId);
             list_view.getItems().remove(selectedFilm);
             setNotificationSuccess("Film erfolgreich gelöscht.");
-        } else {
+        } else if(list_view.getSelectionModel().getSelectedIndex() == -1 && !titel_textField.getText().isEmpty()) {
+            mySQL.deleteFilm(titel_textField.getText());
+            setNotificationSuccess("Film erfolgreich gelöscht.");
+
+
+        } else if(list_view.getSelectionModel().getSelectedIndex() == -1 && titel_textField.getText().isEmpty()) {
             setNotificationError("Bitte wählen Sie einen Film zum Löschen aus\noder geben Sie Titel oder die ID ein.");
         }
     }
@@ -143,11 +161,27 @@ public class Controller {
         pause.play();
     }
 
+    public void unselectItem(){
+        if(this.prevIndexStored == this.newSelectedIndexStored && this.prevIndexStored != -1){
+            this.list_view.getSelectionModel().clearSelection(this.prevIndexStored);
+            System.out.println("\n\t\t\t\t/ - item unselected at index: " + this.prevIndexStored);
+        }
+    }
+
     public void getSelectedIndex(){
 
-        int currentlySelectedIndex = list_view.getSelectionModel().getSelectedIndex();
+        this.prevIndexStored = list_view.getSelectionModel().getSelectedIndex();
+        System.out.println("\n\t\t// Controller.getSelectedIndex() - selectedIndexStored: " + this.prevIndexStored);
+    }
 
-        System.out.println("\n\t\t// Controller.getSelectedIndex() - currentlySelectedIndex: " + currentlySelectedIndex);
+    @FXML
+    public void getSelectedIndexOnClick(){
+        this.list_view.setOnMouseClicked(e->{
+            this.newSelectedIndexStored = list_view.getSelectionModel().getSelectedIndex();
+            System.out.println("\n\t\t/ - item selected at index: " + this.newSelectedIndexStored);
+            this.prevIndexStored= this.newSelectedIndexStored;
+
+        });
 
     }
 

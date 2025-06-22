@@ -41,6 +41,42 @@ public class MySQL {
         }
     }
 
+
+    public void showFilmsContaining(String tf, String s) throws SQLException {
+        try {
+            filmList.clear();
+            establishConnection();
+            String query = "SELECT * FROM film WHERE ? LIKE ?";
+            this.preparedStatement = this.connection.prepareStatement(query);
+            this.preparedStatement.setString(1, "%" + tf + "%");
+            this.preparedStatement.setString(2, "%" + s + "%");
+            rs = preparedStatement.executeQuery();
+            while (rs.next()){
+                String sb = "ID: "+rs.getInt(1)+
+                        "\n\t\tTitel: "+rs.getString("Titel") +
+                        "\n\t\tLagerort: "+rs.getString("Lagerort") +
+                        "\n\t\tSpieldauer: "+rs.getInt("Spieldaue" +
+                        "r") +
+                        "\n\t\tBonus Features: "+rs.getString("BonusFeatures") +
+                        "\n\t\tGenre: "+rs.getString("Genre")+"\n";
+                System.out.println("\n  -> " + sb);
+                filmList.add(sb);
+            }
+        } catch (SQLException e) {
+            System.out.println("\n\t\t// Fehler bei der SQL-Abfrage: " + e);
+            throw e;
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                    closeConnection();
+                } catch (SQLException e) {
+                    System.out.println("\n\t\t// Fehler beim Schließen des ResultSet: " + e);
+                }
+            }
+        }
+    }
+
     public void showAllFilms() throws SQLException {
         try {
             establishConnection();
